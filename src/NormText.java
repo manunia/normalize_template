@@ -1,5 +1,9 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class NormText {
 
@@ -26,5 +30,35 @@ public class NormText {
         map.put(17, "семнадцать");
         map.put(18, "восемнадцать");
         map.put(19, "девятнадцать");
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String fileName = reader.readLine();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
+        String line;
+        while((line = bufferedReader.readLine()) != null) System.out.println(change(line));
+        reader.close();
+        bufferedReader.close();
+    }
+
+
+    private static String change(String str) {
+        StringBuilder stringBuilder = new StringBuilder();
+        StringTokenizer tokenizer = new StringTokenizer(str, " ");
+        while (tokenizer.hasMoreTokens()) {
+            String s1 = tokenizer.nextToken();
+            try {
+                int i = Integer.parseInt(s1);
+                for (Map.Entry<Integer, String> en: map.entrySet()) {
+                    if (i == en.getKey()) s1 = en.getValue();
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+            stringBuilder.append(s1);
+            stringBuilder.append(" ");
+        }
+        return stringBuilder.toString().trim();
     }
 }
