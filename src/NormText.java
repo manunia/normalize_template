@@ -1,3 +1,5 @@
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -30,35 +32,62 @@ public class NormText {
         map.put(17, "семнадцать");
         map.put(18, "восемнадцать");
         map.put(19, "девятнадцать");
+        map.put(20, "двадцать");
+        map.put(21, "двадцать один");
+        map.put(22, "двадцать два");
+        map.put(23, "двадцать три");
+        map.put(24, "двадцать четыре");
+        map.put(25, "двадцать пять");
+        map.put(26, "двадцать шесть");
+        map.put(27, "двадцать семь");
+        map.put(28, "двадцать восемь");
+        map.put(29, "двадцать девять");
+        map.put(30, "тридцать");
+        map.put(31, "тридцать один");
     }
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        String fileName = reader.readLine();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
-        String line;
-        while((line = bufferedReader.readLine()) != null) System.out.println(change(line));
-        reader.close();
-        bufferedReader.close();
+    public static void main(String[] args) {
+
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String fileName = reader.readLine();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) System.out.println(replace(line));
+            reader.close();
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
-
-
-    private static String change(String str) {
-        StringBuilder stringBuilder = new StringBuilder();
-        StringTokenizer tokenizer = new StringTokenizer(str, " ");
-        while (tokenizer.hasMoreTokens()) {
-            String s1 = tokenizer.nextToken();
+    private static String replace(String line) {
+        StringBuilder builder = new StringBuilder();
+        StringTokenizer st = new StringTokenizer(line, " ");
+        while(st.hasMoreTokens()) {
+            String line1 = st.nextToken();
+            if (line1.equals("00")) {
+                line1 = "ноль ноль";
+            }
             try {
-                int i = Integer.parseInt(s1);
-                for (Map.Entry<Integer, String> en: map.entrySet()) {
-                    if (i == en.getKey()) s1 = en.getValue();
+                int x = Integer.parseInt(line1);
+                if (x < 30) {
+                    for (Map.Entry<Integer, String> entry : map.entrySet()) {
+                        if (x == entry.getKey())
+                            line1 = entry.getValue();
+                    }
+                } else if (x > 1999){
+                    for (Map.Entry<Integer, String> entry : map.entrySet()) {
+                        if ((x - 2000) == entry.getKey())
+                            line1 = "две тысячи " + entry.getValue();
+                    }
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace();
             }
-            stringBuilder.append(s1);
-            stringBuilder.append(" ");
+            builder.append(line1);
+            builder.append(" ");
         }
-        return stringBuilder.toString().trim();
+        return builder.toString().trim();
     }
+
 }
