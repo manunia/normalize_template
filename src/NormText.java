@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import ru.morpher.ws3.*;
+import ru.morpher.ws3.russian.ArgumentNotRussianException;
+import ru.morpher.ws3.russian.NumberSpellingResult;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 public class NormText {
 
-    public static Map<Integer, String> map = new HashMap<>();
+    public static Map<Integer, String> map = new HashMap<Integer, String>();
 
     static {
         map.put(0, "ноль");
@@ -62,8 +66,11 @@ public class NormText {
 
     }
     private static String replace(String line) {
+        Client client = new ClientBuilder().build();
+
         StringBuilder builder = new StringBuilder();
         StringTokenizer st = new StringTokenizer(line, " ");
+
         while(st.hasMoreTokens()) {
             String line1 = st.nextToken();
             if (line1.equals("00")) {
@@ -71,17 +78,34 @@ public class NormText {
             }
             try {
                 int x = Integer.parseInt(line1);
-                if (x < 30) {
-                    for (Map.Entry<Integer, String> entry : map.entrySet()) {
-                        if (x == entry.getKey())
-                            line1 = entry.getValue();
-                    }
-                } else if (x > 1999){
-                    for (Map.Entry<Integer, String> entry : map.entrySet()) {
-                        if ((x - 2000) == entry.getKey())
-                            line1 = "две тысячи " + entry.getValue();
-                    }
+
+                try {
+                    NumberSpellingResult result = client.russian().spell(x, "дата");
+
+                    line1 = result.numberDeclension.nominative;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ArgumentNotRussianException e) {
+                    e.printStackTrace();
+                } catch (ArgumentEmptyException e) {
+                    e.printStackTrace();
+                } catch (AccessDeniedException e) {
+                    e.printStackTrace();
                 }
+
+
+//                if (x < 30) {
+//                    for (Map.Entry<Integer, String> entry : map.entrySet()) {
+//                        if (x == entry.getKey())
+//                            line1 = entry.getValue();
+//                    }
+//                } else if (x > 1999){
+//                    for (Map.Entry<Integer, String> entry : map.entrySet()) {
+//                        if ((x - 2000) == entry.getKey())
+//                            line1 = "две тысячи " + entry.getValue();
+//
+//                    }
+//                }
             } catch (NumberFormatException e) {
             }
             builder.append(line1);
