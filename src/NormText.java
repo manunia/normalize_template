@@ -13,34 +13,6 @@ import java.util.regex.Pattern;
 
 public class NormText {
 
-    public static Map<Integer, String> map = new HashMap<Integer, String>();
-
-    static {
-        map.put(1, "один");
-        map.put(2, "два");
-        map.put(3, "три");
-        map.put(4, "четыре");
-        map.put(5, "пять");
-        map.put(6, "шесть");
-        map.put(7, "семь");
-        map.put(8, "восемь");
-        map.put(9, "девять");
-        map.put(10, "десять");
-        map.put(11, "одиннадцать");
-        map.put(12, "двенадцать");
-        map.put(13, "тринадцать");
-        map.put(14, "четырнадцать");
-        map.put(15, "пятнадцать");
-        map.put(16, "шестнадцать");
-        map.put(17, "семнадцать");
-        map.put(18, "восемнадцать");
-        map.put(19, "девятнадцать");
-        map.put(20, "двадцать");
-        map.put(21, "двадцать один");
-        map.put(22, "двадцать два");
-        map.put(23, "двадцать три");
-    }
-
     public static void main(String[] args) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -64,7 +36,6 @@ public class NormText {
 
         while(st.hasMoreTokens()) {
             String line1 = st.nextToken();
-            //System.out.println(line1);
             if (isTime(line1)){
                 line1 = transTime(line1);
             }
@@ -123,27 +94,18 @@ public class NormText {
     private static String transTime(String line) {
         String[] strings = line.split("[:]");
         line = "";
+        RuleBasedNumberFormat format = new RuleBasedNumberFormat(new ULocale("ru"), RuleBasedNumberFormat.SPELLOUT);
+        String ruleset = "%spellout-cardinal-feminine-accusative";
+
         for (int i = 0; i < strings.length; i++) {
-
             if (strings[i].equals("00")) {
-                strings[i] = " ноль ноль";
+                strings[i] = "ноль ноль";
                 line+=strings[i];
+                continue;
             }
-            try {
-                int x = Integer.parseInt(strings[i]);
-
-                for (Map.Entry<Integer, String> entry : map.entrySet()) {
-                    if (x == entry.getKey()) {
-                        strings[i] = entry.getValue();
-                        line+=strings[i];
-                    }
-                }
-            } catch (NumberFormatException e) {
-            }
-
+            line+=format.format(Integer.parseInt(strings[i]), ruleset) + " ";
         }
         return line;
-
     }
 
 }
