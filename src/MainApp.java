@@ -12,6 +12,8 @@ public class MainApp extends Application {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("view/ReplaseOwerview.fxml"));
             primaryStage.setScene(new Scene(root));
+            primaryStage.setTitle("Кейс МВД");
+            primaryStage.setResizable(false);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

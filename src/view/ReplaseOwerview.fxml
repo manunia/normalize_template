@@ -14,58 +14,70 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: rgb(228,235,237);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.RootLayoutController">
-   <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-1.0" prefHeight="32.0" prefWidth="800.0" style="-fx-background-color: rgb(99,106,118);" text="Кейс МВД" textAlignment="CENTER" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <font>
-            <Font name="Calibri Bold" size="14.0" />
-         </font>
-      </Label>
-      <Button fx:id="replaceAllButton" layoutX="313.0" layoutY="535.0" mnemonicParsing="false" onAction="#handleReplaceAll" prefHeight="32.0" prefWidth="194.0" style="-fx-background-color: rgb(100,107,119);" text="Преобразовать текст" textAlignment="JUSTIFY" textFill="#fffefe">
-         <font>
-            <Font name="Calibri Bold" size="18.0" />
-         </font>
-         <effect>
-            <DropShadow />
-         </effect>
-      </Button>
-      <GridPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="375.0" minWidth="10.0" prefWidth="367.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="393.0" minWidth="10.0" prefWidth="393.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="199.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="199.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="362.0" minHeight="10.0" prefHeight="362.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <TextArea fx:id="outputText" prefHeight="350.0" prefWidth="360.0" promptText="Здесь появится результат" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <cursor>
-                  <Cursor fx:constant="TEXT" />
-               </cursor>
-            </TextArea>
-            <TextArea fx:id="inputText" prefHeight="350.0" prefWidth="360.0" promptText="Введите текст для преобразования" wrapText="true" GridPane.rowIndex="2">
-               <cursor>
-                  <Cursor fx:constant="TEXT" />
-               </cursor>
-            </TextArea>
-            <CheckBox fx:id="replaceTime" mnemonicParsing="false" text="Преобразовать время в документе" GridPane.rowIndex="1">
-               <font>
-                  <Font name="Calibri" size="14.0" />
-               </font>
-            </CheckBox>
-            <CheckBox fx:id="replaceDate" mnemonicParsing="false" text="Преобразовать даты в документе">
-               <font>
-                  <Font name="Calibri" size="14.0" />
-               </font>
-            </CheckBox>
-            <RadioButton fx:id="men" mnemonicParsing="false" text="М" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <RadioButton fx:id="women" mnemonicParsing="false" text="Ж" GridPane.columnIndex="1" />
-         </children>
-      </GridPane>
-   </children>
-   <opaqueInsets>
-      <Insets />
-   </opaqueInsets>
+<AnchorPane prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: rgb(228,235,237);"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="model.RootLayoutController">
+    <children>
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-1.0" prefHeight="32.0" prefWidth="800.0"
+               style="-fx-background-color: rgb(99,106,118);" text="Кейс МВД" textAlignment="CENTER" textFill="WHITE"
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <font>
+                <Font name="Calibri Bold" size="14.0"/>
+            </font>
+        </Label>
+        <Button fx:id="replaceAllButton" layoutX="313.0" layoutY="555.0" mnemonicParsing="false"
+                onAction="#handleReplaceAll" prefHeight="32.0" prefWidth="194.0"
+                style="-fx-background-color: rgb(100,107,119);" text="Преобразовать текст" textAlignment="JUSTIFY"
+                textFill="#fffefe">
+            <font>
+                <Font name="Calibri Bold" size="18.0"/>
+            </font>
+            <effect>
+                <DropShadow/>
+            </effect>
+        </Button>
+        <GridPane prefHeight="600.0" prefWidth="800.0" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="20.0"
+                  AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="50.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="375.0" minWidth="10.0" prefWidth="367.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="393.0" minWidth="10.0" prefWidth="393.0"/>
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="199.0" minHeight="10.0" prefHeight="43.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="199.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES"/>
+                <RowConstraints maxHeight="362.0" minHeight="10.0" prefHeight="362.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <children>
+                <TextArea fx:id="outputText" prefHeight="350.0" prefWidth="360.0" promptText="Здесь появится результат"
+                          wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <cursor>
+                        <Cursor fx:constant="TEXT"/>
+                    </cursor>
+                </TextArea>
+                <TextArea fx:id="inputText" prefHeight="350.0" prefWidth="360.0"
+                          promptText="Введите текст для преобразования" wrapText="true" GridPane.rowIndex="2">
+                    <cursor>
+                        <Cursor fx:constant="TEXT"/>
+                    </cursor>
+                </TextArea>
+                <CheckBox fx:id="replaceTime" mnemonicParsing="false" text="Преобразовать время в документе"
+                          GridPane.rowIndex="1">
+                    <font>
+                        <Font name="Calibri" size="14.0"/>
+                    </font>
+                </CheckBox>
+                <CheckBox fx:id="replaceDate" mnemonicParsing="false" text="Преобразовать даты в документе">
+                    <font>
+                        <Font name="Calibri" size="14.0"/>
+                    </font>
+                </CheckBox>
+                <RadioButton fx:id="men" mnemonicParsing="false" text="М" GridPane.columnIndex="1"
+                             GridPane.rowIndex="1"/>
+                <RadioButton fx:id="women" mnemonicParsing="false" text="Ж" GridPane.columnIndex="1"/>
+            </children>
+        </GridPane>
+    </children>
+    <opaqueInsets>
+        <Insets/>
+    </opaqueInsets>
 </AnchorPane>
