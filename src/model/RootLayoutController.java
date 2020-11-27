@@ -1,5 +1,9 @@
+package model;
+
 import com.ibm.icu.text.RuleBasedNumberFormat;
 import com.ibm.icu.util.ULocale;
+import javafx.event.ActionEvent;
+import ru.morpher.ws3.russian.DeclensionResult;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -7,20 +11,24 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NormText {
+public class RootLayoutController {
 
-    public static void main(String[] args) {
+
+
+    public void reader() {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String fileName = reader.readLine();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(replace(line));
+                System.out.println(replace(line, true, true, true));
             }
             reader.close();
             bufferedReader.close();
@@ -29,24 +37,44 @@ public class NormText {
         }
     }
 
-    private static String replace(String line) {
+
+    private static String replace(String line, boolean isWoomen, boolean isReplaseDate, boolean isReplaseTime) {
 
         StringBuilder builder = new StringBuilder();
         StringTokenizer st = new StringTokenizer(line, " ");
 
         while(st.hasMoreTokens()) {
             String line1 = st.nextToken();
-            if (isTime(line1)){
-                line1 = transTime(line1);
+            if (isPronoun(line1)) {
+                if (isWoomen) {
+                    line1 = "она";
+                } else {
+                    line1 = "он";
+                }
             }
-            if (isDate(line1)) {
-                line1 = transDate(line1);
-                line1 = prepareDate(line1);
+            if (isReplaseTime) {
+                if (isTime(line1)) {
+                    line1 = transTime(line1);
+                }
+            }
+            if (isReplaseDate) {
+                if (isDate(line1)) {
+                    line1 = transDate(line1);
+                    line1 = prepareDate(line1);
+                }
             }
             builder.append(line1);
             builder.append(" ");
         }
         return builder.toString().trim();
+    }
+
+    private static boolean isPronoun(String line1) {
+        if (line1.equalsIgnoreCase("я") || line1 == "я" || line1 == "Я") {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private static boolean isTime(String line) {
@@ -108,4 +136,8 @@ public class NormText {
         return line;
     }
 
+    public void onClickMethod(ActionEvent actionEvent) {
+        System.out.println("click");
+        reader();
+    }
 }
