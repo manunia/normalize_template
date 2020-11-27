@@ -2,14 +2,12 @@ package model;
 
 import com.ibm.icu.text.RuleBasedNumberFormat;
 import com.ibm.icu.util.ULocale;
-import javafx.event.ActionEvent;
-import ru.morpher.ws3.russian.DeclensionResult;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -19,29 +17,32 @@ import java.util.regex.Pattern;
 
 public class RootLayoutController {
 
+    @FXML
+    private TextArea inputText;
+    @FXML
+    private TextArea outputText;
+    @FXML
+    private RadioButton men;
+    @FXML
+    private RadioButton women;
+    @FXML
+    private CheckBox replaceDate;
+    @FXML
+    private CheckBox replaceTime;
 
-
-    public void reader() {
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-            String fileName = reader.readLine();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(replace(line, true, true, true));
-            }
-            reader.close();
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Инициализирует класс-контроллер. Этот метод вызывается автоматически
+     * после того, как fxml-файл будет загружен.
+     */
+    @FXML
+    private void initialize() {
     }
 
 
     private static String replace(String line, boolean isWoomen, boolean isReplaseDate, boolean isReplaseTime) {
 
         StringBuilder builder = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(line, " ");
+        StringTokenizer st = new StringTokenizer(line, " ,;:\n\t");
 
         while(st.hasMoreTokens()) {
             String line1 = st.nextToken();
@@ -136,8 +137,35 @@ public class RootLayoutController {
         return line;
     }
 
-    public void onClickMethod(ActionEvent actionEvent) {
-        System.out.println("click");
-        reader();
+    private boolean isWomen() {
+        if ((!men.isSelected() && !women.isSelected())
+                || men.isSelected() && women.isSelected()) {
+            alert("Необходимо указать один пол.");
+        }
+        if (men.isSelected()) {
+            return false;
+        } else if (women.isSelected()) {
+            return true;
+        }
+        return true;
+    }
+
+    @FXML
+    public void handleReplaceAll() {
+        if (inputText.getText() == null || inputText.getText().length() == 0) {
+            alert("Введите текст для преобразования");
+        }
+        outputText
+                .setText(replace(inputText.getText(), isWomen(), replaceDate.isSelected(), replaceTime.isSelected()));
+    }
+
+    // Показываем сообщение об ошибке.
+    private void alert(String error) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.initOwner(alert.getOwner());
+        alert.setTitle("Ошибка!");
+        alert.setHeaderText("Внимание:");
+        alert.setContentText(error);
+        alert.showAndWait();
     }
 }

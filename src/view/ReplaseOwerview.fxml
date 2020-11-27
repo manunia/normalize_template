@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: rgb(228,235,237);" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="model.RootLayoutController" >
+   <children>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutY="-1.0" prefHeight="32.0" prefWidth="800.0" style="-fx-background-color: rgb(99,106,118);" text="Кейс МВД" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Calibri Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label alignment="TOP_LEFT" contentDisplay="RIGHT" layoutX="31.0" layoutY="143.0" prefHeight="17.0" prefWidth="470.0" text="Введите в поле данные для изменения:">
+         <font>
+            <Font name="Calibri" size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="replaceAllButton" layoutX="313.0" layoutY="535.0" mnemonicParsing="false" onAction="#handleReplaceAll" prefHeight="32.0" prefWidth="194.0" style="-fx-background-color: rgb(100,107,119);" text="Преобразовать текст" textAlignment="JUSTIFY" textFill="#fffefe">
+         <font>
+            <Font name="Calibri Bold" size="18.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <TextArea fx:id="inputText" layoutX="31.0" layoutY="171.0" prefHeight="350.0" prefWidth="360.0">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextArea>
+      <CheckBox fx:id="replaceTime" layoutX="65.0" layoutY="46.0" mnemonicParsing="false" selected="true" text="Преобразовать время в документе">
+         <font>
+            <Font name="Calibri" size="14.0" />
+         </font>
+      </CheckBox>
+      <CheckBox fx:id="replaceDate" layoutX="65.0" layoutY="80.0" mnemonicParsing="false" selected="true" text="Преобразовать даты в документе">
+         <font>
+            <Font name="Calibri" size="14.0" />
+         </font>
+      </CheckBox>
+      <Label alignment="TOP_LEFT" contentDisplay="RIGHT" layoutX="429.0" layoutY="143.0" prefHeight="22.0" prefWidth="368.0" text="Результат:">
+         <font>
+            <Font name="Calibri" size="18.0" />
+         </font>
+      </Label>
+      <TextArea fx:id="outputText" layoutX="418.0" layoutY="171.0" prefHeight="350.0" prefWidth="360.0">
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextArea>
+      <RadioButton fx:id="women" layoutX="429.0" layoutY="47.0" mnemonicParsing="false" text="Ж" />
+      <RadioButton fx:id="men" layoutX="429.0" layoutY="81.0" mnemonicParsing="false" text="М" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</AnchorPane>
