@@ -32,6 +32,8 @@ public class RootLayoutController {
     @FXML
     private CheckBox replaceTime;
 
+    private boolean isReplaceble;
+
     /**
      * Инициализирует класс-контроллер. Этот метод вызывается автоматически
      * после того, как fxml-файл будет загружен.
@@ -41,7 +43,7 @@ public class RootLayoutController {
     }
 
     private void replace(String line, boolean isWoomen, boolean isReplaseDate, boolean isReplaseTime) {
-        StringBuilder builder = new StringBuilder();
+        //StringBuilder builder = new StringBuilder();
         StringTokenizer st = new StringTokenizer(line, " ,;:\n\t");
         while (st.hasMoreTokens()) {
             String line1 = st.nextToken();
@@ -51,6 +53,7 @@ public class RootLayoutController {
                 } else {
                     line1 = "он";
                 }
+                isReplaceble = true;
             }
             if (isFirstPersonVerb(line1)) {
                 System.out.println(line1);
@@ -58,24 +61,34 @@ public class RootLayoutController {
             if (isReplaseTime) {
                 if (isTime(line1)) {
                     line1 = transTime(line1);
+                    isReplaceble = true;
                 }
+
             }
             if (isReplaseDate) {
                 if (isDate(line1)) {
                     line1 = transDate(line1);
                     line1 = prepareDate(line1);
+                    isReplaceble = true;
                 }
 
             }
-            builder.append(line1);
-            builder.append(" ");
+//            builder.append(line1);
+//            builder.append(" ");
+            if (isReplaceble) {
+                webView.getEngine().executeScript("document.write(\"<span style='color:red'>" + line1 + " "
+                        + "</span>\");");
+            } else {
+                webView.getEngine().executeScript("document.write(\"<span style='color:black'>" + line1 + " "
+                        + "</span>\");");
+            }
+            isReplaceble = false;
         }
-        webView.getEngine().loadContent(builder.toString());
+        //webView.getEngine().loadContent(builder.toString());
     }
 
     private boolean isFirstPersonVerb(String line1) {
         RuleBasedPosTagger tagger = new RuleBasedPosTagger();
-        System.out.println(tagger.posTag(line1));
         if (tagger.posTag(line1).equals(RuleBasedPosTagger.PosTag.FIRST_PERSON_VERB)) {
             return true;
         }
