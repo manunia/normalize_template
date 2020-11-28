@@ -7,6 +7,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
+import javafx.scene.web.WebView;
+import util.RuleBasedPosTagger;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -20,7 +22,7 @@ public class RootLayoutController {
     @FXML
     private TextArea inputText;
     @FXML
-    private TextArea outputText;
+    private WebView webView = new WebView();
     @FXML
     private RadioButton men;
     @FXML
@@ -38,13 +40,10 @@ public class RootLayoutController {
     private void initialize() {
     }
 
-
-    private static String replace(String line, boolean isWoomen, boolean isReplaseDate, boolean isReplaseTime) {
-
+    private void replace(String line, boolean isWoomen, boolean isReplaseDate, boolean isReplaseTime) {
         StringBuilder builder = new StringBuilder();
         StringTokenizer st = new StringTokenizer(line, " ,;:\n\t");
-
-        while(st.hasMoreTokens()) {
+        while (st.hasMoreTokens()) {
             String line1 = st.nextToken();
             if (isPronoun(line1)) {
                 if (isWoomen) {
@@ -52,6 +51,9 @@ public class RootLayoutController {
                 } else {
                     line1 = "он";
                 }
+            }
+            if (isFirstPersonVerb(line1)) {
+                System.out.println(line1);
             }
             if (isReplaseTime) {
                 if (isTime(line1)) {
@@ -63,11 +65,21 @@ public class RootLayoutController {
                     line1 = transDate(line1);
                     line1 = prepareDate(line1);
                 }
+
             }
             builder.append(line1);
             builder.append(" ");
         }
-        return builder.toString().trim();
+        webView.getEngine().loadContent(builder.toString());
+    }
+
+    private boolean isFirstPersonVerb(String line1) {
+        RuleBasedPosTagger tagger = new RuleBasedPosTagger();
+        System.out.println(tagger.posTag(line1));
+        if (tagger.posTag(line1).equals(RuleBasedPosTagger.PosTag.FIRST_PERSON_VERB)) {
+            return true;
+        }
+        return false;
     }
 
     private static boolean isPronoun(String line1) {
@@ -82,7 +94,7 @@ public class RootLayoutController {
         String[] str = line.split("[:]");
         try {
             int x = Integer.parseInt(str[0]);
-            if (x>=0 && x <= 23) return true;
+            if (x >= 0 && x <= 23) return true;
             else return false;
         } catch (NumberFormatException e) {
             return false;
@@ -116,7 +128,7 @@ public class RootLayoutController {
         RuleBasedNumberFormat format = new RuleBasedNumberFormat(new ULocale("ru"), RuleBasedNumberFormat.SPELLOUT);
         String ruleset = "%spellout-ordinal-neuter-genitive";
         line = format.format(Integer.parseInt(strings[0]), ruleset) + " " +
-                strings[1] + " " + format.format(Integer.parseInt(strings[2]),ruleset) + " года";
+                strings[1] + " " + format.format(Integer.parseInt(strings[2]), ruleset) + " года";
         return line;
     }
 
@@ -129,10 +141,10 @@ public class RootLayoutController {
         for (int i = 0; i < strings.length; i++) {
             if (strings[i].equals("00")) {
                 strings[i] = "ноль ноль";
-                line+=strings[i];
+                line += strings[i];
                 continue;
             }
-            line+=format.format(Integer.parseInt(strings[i]), ruleset) + " ";
+            line += format.format(Integer.parseInt(strings[i]), ruleset) + " ";
         }
         return line;
     }
@@ -155,8 +167,9 @@ public class RootLayoutController {
         if (inputText.getText() == null || inputText.getText().length() == 0) {
             alert("Введите текст для преобразования");
         }
-        outputText
-                .setText(replace(inputText.getText(), isWomen(), replaceDate.isSelected(), replaceTime.isSelected()));
+        replace(inputText.getText(), isWomen(), replaceDate.isSelected(), replaceTime.isSelected());
+//        outputText
+//                .setText(replace(inputText.getText(), isWomen(), replaceDate.isSelected(), replaceTime.isSelected()));
     }
 
     // Показываем сообщение об ошибке.
