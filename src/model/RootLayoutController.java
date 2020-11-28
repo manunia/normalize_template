@@ -32,6 +32,8 @@ public class RootLayoutController {
     @FXML
     private CheckBox replaceTime;
 
+    private boolean isReplaceble;
+
     /**
      * Инициализирует класс-контроллер. Этот метод вызывается автоматически
      * после того, как fxml-файл будет загружен.
@@ -41,41 +43,83 @@ public class RootLayoutController {
     }
 
     private void replace(String line, boolean isWoomen, boolean isReplaseDate, boolean isReplaseTime) {
-        StringBuilder builder = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(line, " ,;:\n\t");
+        StringTokenizer st = new StringTokenizer(line, " \n");
         while (st.hasMoreTokens()) {
             String line1 = st.nextToken();
-            if (isPronoun(line1)) {
-                if (isWoomen) {
-                    line1 = "она";
-                } else {
-                    line1 = "он";
+
+            if (isDirectSpeachStart(line1)) {
+                if (!line1.endsWith(".") || !line1.endsWith("\"")) {
+                    isReplaceble = false;
                 }
             }
+            if (isPronoun(line1)) {
+                if (isWoomen) {
+                    if (line1.equalsIgnoreCase("я")) {
+                        line1 = "она";
+                    }
+                    if (line1.equalsIgnoreCase("мне")) {
+                        line1 = "ей";
+                    }
+                } else {
+                    if (line1.equalsIgnoreCase("я")) {
+                        line1 = "он";
+                    }
+                    if (line1.equalsIgnoreCase("мне")) {
+                        line1 = "ему";
+                    }
+                }
+                isReplaceble = true;
+            }
             if (isFirstPersonVerb(line1)) {
-                System.out.println(line1);
+                line1 = verbReplace(line1);
+                isReplaceble = true;
             }
             if (isReplaseTime) {
                 if (isTime(line1)) {
+                    isReplaceble = true;
                     line1 = transTime(line1);
                 }
             }
             if (isReplaseDate) {
                 if (isDate(line1)) {
+                    isReplaceble = true;
                     line1 = transDate(line1);
                     line1 = prepareDate(line1);
                 }
-
             }
-            builder.append(line1);
-            builder.append(" ");
+            if (isReplaceble) {
+                webView.getEngine().executeScript("document.write(\"<span style='color:red'>" + line1 + " "
+                        + "</span>\");");
+            } else {
+                webView.getEngine().executeScript("document.write(\"<span style='color:black'>" + line1 + " "
+                        + "</span>\");");
+            }
+            isReplaceble = false;
         }
-        webView.getEngine().loadContent(builder.toString());
+    }
+
+    private String verbReplace(String verbStr)
+    {
+        String switch_on = verbStr;
+        switch (switch_on)
+        {
+            case "проживаю":return "проживает";
+            case "ухожу":return "уходит";
+            case "вижу":return "видит";
+            //etc
+            default: return null;
+        }
+    }
+
+    private boolean isDirectSpeachStart(String line1) {
+        if (line1.startsWith("-") || line1.startsWith("\"")) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isFirstPersonVerb(String line1) {
         RuleBasedPosTagger tagger = new RuleBasedPosTagger();
-        System.out.println(tagger.posTag(line1));
         if (tagger.posTag(line1).equals(RuleBasedPosTagger.PosTag.FIRST_PERSON_VERB)) {
             return true;
         }
@@ -83,7 +127,8 @@ public class RootLayoutController {
     }
 
     private static boolean isPronoun(String line1) {
-        if (line1.equalsIgnoreCase("я") || line1 == "я" || line1 == "Я") {
+        if (line1.equalsIgnoreCase("я")
+            || line1.equalsIgnoreCase("мне")) {
             return true;
         } else {
             return false;
@@ -133,7 +178,7 @@ public class RootLayoutController {
     }
 
     private static String transTime(String line) {
-        String[] strings = line.split("[:]");
+        String[] strings = line.replace("."," ").trim().split("[:]");
         line = "";
         RuleBasedNumberFormat format = new RuleBasedNumberFormat(new ULocale("ru"), RuleBasedNumberFormat.SPELLOUT);
         String ruleset = "%spellout-cardinal-feminine-accusative";
