@@ -47,31 +47,33 @@ public class RootLayoutController {
         StringTokenizer st = new StringTokenizer(line, " ,;:\n\t");
         while (st.hasMoreTokens()) {
             String line1 = st.nextToken();
-            if (isPronoun(line1)) {
-                if (isWoomen) {
-                    line1 = "она";
-                } else {
-                    line1 = "он";
-                }
-                isReplaceble = true;
-            }
-            if (isFirstPersonVerb(line1)) {
-                System.out.println(line1);
-            }
-            if (isReplaseTime) {
-                if (isTime(line1)) {
-                    line1 = transTime(line1);
+            if (!isDirectSpeach(line1)) {
+                if (isPronoun(line1)) {
+                    if (isWoomen) {
+                        line1 = "она";
+                    } else {
+                        line1 = "он";
+                    }
                     isReplaceble = true;
                 }
-
-            }
-            if (isReplaseDate) {
-                if (isDate(line1)) {
-                    line1 = transDate(line1);
-                    line1 = prepareDate(line1);
-                    isReplaceble = true;
+                if (isFirstPersonVerb(line1)) {
+                    System.out.println(line1);
                 }
+                if (isReplaseTime) {
+                    if (isTime(line1)) {
+                        line1 = transTime(line1);
+                        isReplaceble = true;
+                    }
 
+                }
+                if (isReplaseDate) {
+                    if (isDate(line1)) {
+                        line1 = transDate(line1);
+                        line1 = prepareDate(line1);
+                        isReplaceble = true;
+                    }
+
+                }
             }
 //            builder.append(line1);
 //            builder.append(" ");
@@ -84,7 +86,13 @@ public class RootLayoutController {
             }
             isReplaceble = false;
         }
-        //webView.getEngine().loadContent(builder.toString());
+    }
+
+    private boolean isDirectSpeach(String line1) {
+        if (line1.startsWith("-") || line1.startsWith("\"") || line1.endsWith("\"")) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isFirstPersonVerb(String line1) {
