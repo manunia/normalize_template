@@ -43,40 +43,49 @@ public class RootLayoutController {
     }
 
     private void replace(String line, boolean isWoomen, boolean isReplaseDate, boolean isReplaseTime) {
-        //StringBuilder builder = new StringBuilder();
-        StringTokenizer st = new StringTokenizer(line, " ,;:\n\t");
+        StringTokenizer st = new StringTokenizer(line, " \n");
         while (st.hasMoreTokens()) {
             String line1 = st.nextToken();
-            if (!isDirectSpeach(line1)) {
-                if (isPronoun(line1)) {
-                    if (isWoomen) {
-                        line1 = "она";
-                    } else {
-                        line1 = "он";
-                    }
-                    isReplaceble = true;
-                }
-                if (isFirstPersonVerb(line1)) {
-                    System.out.println(line1);
-                }
-                if (isReplaseTime) {
-                    if (isTime(line1)) {
-                        line1 = transTime(line1);
-                        isReplaceble = true;
-                    }
 
-                }
-                if (isReplaseDate) {
-                    if (isDate(line1)) {
-                        line1 = transDate(line1);
-                        line1 = prepareDate(line1);
-                        isReplaceble = true;
-                    }
-
+            if (isDirectSpeachStart(line1)) {
+                if (!line1.endsWith(".") || !line1.endsWith("\"")) {
+                    isReplaceble = false;
                 }
             }
-//            builder.append(line1);
-//            builder.append(" ");
+            if (isPronoun(line1)) {
+                if (isWoomen) {
+                    if (line1.equalsIgnoreCase("я")) {
+                        line1 = "она";
+                    }
+                    if (line1.equalsIgnoreCase("мне")) {
+                        line1 = "ей";
+                    }
+                } else {
+                    if (line1.equalsIgnoreCase("я")) {
+                        line1 = "он";
+                    }
+                    if (line1.equalsIgnoreCase("мне")) {
+                        line1 = "ему";
+                    }
+                }
+                isReplaceble = true;
+            }
+//            if (isFirstPersonVerb(line1)) {
+//                System.out.println(line1);
+//            }
+            if (isReplaseTime) {
+                if (isTime(line1)) {
+                    isReplaceble = true;
+                    line1 = transTime(line1);
+                }
+            }
+            if (isReplaseDate) {
+                if (isDate(line1)) {
+                    isReplaceble = true;
+                    line1 = transDate(line1);
+                    line1 = prepareDate(line1);
+                }
+            }
             if (isReplaceble) {
                 webView.getEngine().executeScript("document.write(\"<span style='color:red'>" + line1 + " "
                         + "</span>\");");
@@ -88,8 +97,8 @@ public class RootLayoutController {
         }
     }
 
-    private boolean isDirectSpeach(String line1) {
-        if (line1.startsWith("-") || line1.startsWith("\"") || line1.endsWith("\"")) {
+    private boolean isDirectSpeachStart(String line1) {
+        if (line1.startsWith("-") || line1.startsWith("\"")) {
             return true;
         }
         return false;
@@ -104,7 +113,8 @@ public class RootLayoutController {
     }
 
     private static boolean isPronoun(String line1) {
-        if (line1.equalsIgnoreCase("я") || line1 == "я" || line1 == "Я") {
+        if (line1.equalsIgnoreCase("я")
+            || line1.equalsIgnoreCase("мне")) {
             return true;
         } else {
             return false;
@@ -154,7 +164,7 @@ public class RootLayoutController {
     }
 
     private static String transTime(String line) {
-        String[] strings = line.split("[:]");
+        String[] strings = line.replace("."," ").trim().split("[:]");
         line = "";
         RuleBasedNumberFormat format = new RuleBasedNumberFormat(new ULocale("ru"), RuleBasedNumberFormat.SPELLOUT);
         String ruleset = "%spellout-cardinal-feminine-accusative";
