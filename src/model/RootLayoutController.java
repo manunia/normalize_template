@@ -70,9 +70,10 @@ public class RootLayoutController {
                 }
                 isReplaceble = true;
             }
-//            if (isFirstPersonVerb(line1)) {
-//                System.out.println(line1);
-//            }
+            if (isFirstPersonVerb(line1)) {
+                line1 = verbReplace(line1);
+                isReplaceble = true;
+            }
             if (isReplaseTime) {
                 if (isTime(line1)) {
                     isReplaceble = true;
@@ -94,6 +95,19 @@ public class RootLayoutController {
                         + "</span>\");");
             }
             isReplaceble = false;
+        }
+    }
+
+    private String verbReplace(String verbStr)
+    {
+        String switch_on = verbStr;
+        switch (switch_on)
+        {
+            case "проживаю":return "проживает";
+            case "ухожу":return "уходит";
+            case "вижу":return "видит";
+            //etc
+            default: return null;
         }
     }
 
