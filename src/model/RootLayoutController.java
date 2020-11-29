@@ -106,6 +106,7 @@ public class RootLayoutController {
             case "проживаю":return "проживает";
             case "ухожу":return "уходит";
             case "вижу":return "видит";
+            case "учусь":return "учится";
             //etc
             default: return null;
         }
